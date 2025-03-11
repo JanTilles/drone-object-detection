@@ -4,8 +4,10 @@ def create_data_folders(base_path):
     folders = [
         'images/train',
         'images/val',
+        'images/test',  # Added test folder
         'labels/train',
-        'labels/val'
+        'labels/val',
+        'labels/test'  # Added test folder
     ]
     
     for folder in folders:
