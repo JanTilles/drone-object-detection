@@ -7,3 +7,14 @@ This repository is dedicated to training YOLO (You Only Look Once) models for ob
 2. Model can be used for drones to detect maritime objects.
 
 ## Getting Started
+
+### Clone the Repository
+```bash
+git clone https://github.com/yourusername/drone-object-detection.git
+cd drone-object-detection
+```
+
+### Install Requirements
+```bash
+pip install -r requirements.txt
+```
