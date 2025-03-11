@@ -1,0 +1,4 @@
+# Ignore the dataset folder
+dataset/*
+# Allow .gitkeep files
+!dataset/**/.gitkeep
