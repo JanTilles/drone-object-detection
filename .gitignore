@@ -1,4 +1,24 @@
-# Ignore the dataset folder
-dataset/*
 # Allow .gitkeep files
 !dataset/**/.gitkeep
+
+# Virtual environments
+.venv/
+.env/
+
+# Logs and debug files
+logs/
+*.log
+
+# Jupyter Notebook checkpoints
+.ipynb_checkpoints/
+
+# Model artifacts and weights
+*.h5
+*.pth
+*.pt
+models/
+runs/
+
+# Dataset and output directories
+dataset/
+mlruns/
