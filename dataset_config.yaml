@@ -1,11 +1,12 @@
 # path
-path: ./dataset
+#path: ./dataset
+path: c:/Users/JukkaPelto-aho/DocumentsNotBackedUp/yamk-git/drone-object-detection/dataset
 train: images/train  
 val: images/val  
 test: images/test
 
 # Number of classes
-nc: 5
+nc: 6
 
 # Class names
 names:
@@ -14,3 +15,4 @@ names:
   - ship
   - sea_mark
   - floating_object
+  - dock

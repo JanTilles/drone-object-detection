@@ -3,13 +3,17 @@ import mlflow
 from ultralytics import YOLO, settings
 
 def setup_mlflow():
+
+    mlflowStorage = "file:///C:/Users/JukkaPelto-aho/OneDrive - Pelto-aho Software Oy/Documents/yamk/AI-project/mlruns"
+
     """Set up MLflow experiment and logging."""
     settings.update({"mlflow": True})  # Enable MLflow logging
     os.environ["MLFLOW_EXPERIMENT_NAME"] = "DIANA_YOLO_Training"
     os.environ["MLFLOW_RUN"] = "baseline_run"
-    mlflow.set_tracking_uri("file:///C:/Users/Teemu/drone-object-detection/mlruns")
+    mlflow.set_tracking_uri(mlflowStorage)
 
-    print("Run: mlflow ui --backend-store-uri file:///C:/Users/Teemu/drone-object-detection/mlruns")
+    #print("Run: mlflow ui --backend-store-uri file:///C:/Users/Teemu/drone-object-detection/mlruns")
+    print(f"Run: mlflow ui --backend-store-uri {mlflowStorage}")
     print("Open: http://127.0.0.1:5000 in your browser")
 
 def train_model():
@@ -18,10 +22,10 @@ def train_model():
 
     train_params = {
         "data": "dataset_config.yaml",
-        "epochs": 100,
+        "epochs": 1,
         "batch": 16,  
         "imgsz": 640,  
-        "device": 0,  # Use GPU
+        "device": "cpu",  # Use GPU 0, or -1 to run on CPU
         "project": "mlruns/DIANA",
         "name": "baseline_run",
         "save": True,  
