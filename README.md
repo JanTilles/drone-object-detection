@@ -64,19 +64,19 @@ DIANA/annotations/test.json
 ```bash
 #!/bin/bash
 #SBATCH --job-name=diana_tf
-#SBATCH --account=project_2013587
+#SBATCH --account=project_<ID>
 #SBATCH --partition=gpu
 #SBATCH --gres=gpu:v100:4
 #SBATCH --cpus-per-task=8
 #SBATCH --mem=48G
 #SBATCH --time=02:00:00
-#SBATCH --output=/scratch/project_2013587/tillesja/train_output.log
+#SBATCH --output=/scratch/project_<ID>/<USERNAME>/train_output.log
 
 module purge
 module load tensorflow/2.18
 module load cuda/12.6.0
 
-apptainer_wrapper exec python3 /scratch/project_2013587/train_model.py
+apptainer_wrapper exec python3 /scratch/project_<ID>/train_model.py
 ```
 
 ---
@@ -84,7 +84,7 @@ apptainer_wrapper exec python3 /scratch/project_2013587/train_model.py
 ### 3. Submit the Training Job
 
 ```bash
-cd /scratch/project_2013587
+cd /scratch/project_<ID>
 sbatch train_model.sh
 ```
 
