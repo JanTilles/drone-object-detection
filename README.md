@@ -110,7 +110,6 @@ seff <JOB_ID>                       # Summary after run (GPU/CPU usage)
 
 ## 💡 Notes
 
-- The model uses **ResNet50 (frozen or fine-tuned)** for feature extraction
 - Training is distributed using `tf.distribute.MirroredStrategy` (multi-GPU)
 - Images are streamed using the efficient `tf.data` pipeline
 
@@ -121,6 +120,7 @@ seff <JOB_ID>                       # Summary after run (GPU/CPU usage)
 - Add TensorBoard logging
 - Add COCO-style evaluation metrics
 - Fine-tune ResNet layers for better accuracy
+- The model **ResNet50 (frozen or fine-tuned)** for feature extraction
 
 ---
 
