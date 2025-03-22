@@ -23,12 +23,14 @@ def train_model():
     train_params = {
         "data": "dataset_config.yaml",
         "epochs": 1,
+        "fraction": 0.01,
         "batch": 16,  
         "imgsz": 640,  
-        "device": "cpu",  # Use GPU 0, or -1 to run on CPU
+        "device": "cpu",  # Use GPU 0, or cpu to run on CPU
         "project": "mlruns/DIANA",
         "name": "baseline_run",
-        "save": True,  
+        "save": True, 
+        "cache": True,
         "patience": 20,  
         "save_period": 10, 
         "workers": 8,  
@@ -47,5 +49,6 @@ def train_model():
     results = model.train(**train_params)
 
 if __name__ == "__main__":
-    setup_mlflow()
+    #setup_mlflow()
+    settings.update({"mlflow": False})  # Disable MLflow logging
     train_model()
