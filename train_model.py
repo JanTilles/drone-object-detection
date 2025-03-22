@@ -16,7 +16,7 @@ import os
 
 MODEL_ARCH = "yolov8n.pt"  # Can be changed to yolov8s.pt, yolov8m.pt, etc.
 
-EPOCHS = 100
+EPOCHS = 1
 
 IMG_SIZE = (960, 544)  # Keep original 16:9 image ratio
 

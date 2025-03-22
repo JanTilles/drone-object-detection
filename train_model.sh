@@ -2,9 +2,9 @@
 
 #SBATCH --job-name=yolo_training
 
-#SBATCH --account=project_2013587
+#SBATCH --account=project_2013501
 
-#SBATCH --partition=gpu
+#SBATCH --partition=gputest
 
 #SBATCH --gres=gpu:v100:1
 
