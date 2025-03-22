@@ -28,11 +28,11 @@ IMG_HEIGHT, IMG_WIDTH = 512, 288
 
 BATCH_SIZE = 32
 
-EPOCHS = 100
+EPOCHS = 1
 
 
 
-SCRATCH_PATH = "/scratch/project_2013587/tillesja/DIANA"
+SCRATCH_PATH = "/scratch/project_2013501/DIANA"
 
 IMAGE_PATH = os.path.join(SCRATCH_PATH, "images")
 
@@ -194,7 +194,7 @@ print("✅ Multi-GPU Model Compiled Successfully!")
 
 early_stop = EarlyStopping(monitor='val_loss', patience=20, restore_best_weights=True)
 
-checkpoint = ModelCheckpoint('/scratch/project_2013587/tillesja/best_model.keras', monitor='val_loss', save_best_only=True)
+checkpoint = ModelCheckpoint('/scratch/project_2013501/best_model.keras', monitor='val_loss', save_best_only=True)
 
 
 
@@ -254,7 +254,7 @@ plt.legend()
 
 
 
-plt.savefig('/scratch/project_2013587/tillesja/training_curves.png')
+plt.savefig('/scratch/project_2013501/training_curves.png')
 
 plt.close()
 
@@ -262,7 +262,7 @@ plt.close()
 
 # Save final trained model
 
-model.save("/scratch/project_2013587/tillesja/diana_trained_model.keras")
+model.save("/scratch/project_2013501/diana_trained_model.keras")
 
 
 

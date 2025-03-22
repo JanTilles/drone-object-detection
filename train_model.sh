@@ -2,7 +2,7 @@
 
 #SBATCH --job-name=multi_gpu_training
 
-#SBATCH --account=project_2013587
+#SBATCH --account=project_2013501
 
 #SBATCH --partition=gpu
 
@@ -14,7 +14,7 @@
 
 #SBATCH --time=6:00:00
 
-#SBATCH --output=/scratch/project_2013587/tillesja/train_output.log
+#SBATCH --output=/scratch/project_2013501/train_output.log
 
 
 
@@ -26,6 +26,6 @@ module load cuda/12.6.0
 
 
 
-apptainer_wrapper exec python3 /scratch/project_2013587/train_model.py
+apptainer_wrapper exec python3 /scratch/project_2013501/train_model.py
 
 
