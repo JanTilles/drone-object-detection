@@ -3,38 +3,6 @@
 > **Note:** The DIANA dataset is not included in this repository. Additionally, its original COCO format has been modified to the structure presented here before training.
 
 This project contains a TensorFlow-based Convolutional Neural Network (CNN) pipeline to train a deep learning model on the [DIANA drone dataset](https://www.kaggle.com/datasets/aminmajd/diana-drone-imagery-for-archipelago-navigation), optimized for **multi-GPU training on Puhti**, the CSC supercomputer in Finland.
-
----
-
-## 📁 Folder Structure
-
-```
-.
-├── train_model.py                # Main Python training script
-├── train_model.sh                # SLURM batch job for Puhti
-├── DIANA/
-│   ├── images/
-│   │   ├── train/
-│   │   ├── val/
-│   │   └── test/
-│   └── annotations/
-│       ├── train.json
-│       ├── val.json
-│       └── test.json
-├── best_model.keras             # Automatically saved best model (val_loss)
-├── diana_trained_model.keras    # Last-epoch model (may not be best)
-├── training_curves.png          # Training vs validation plots
-└── README.md
-```
-
----
-
-## ⚙️ Requirements on Puhti
-
-- **TensorFlow**: Load the module with GPU support
-- **CUDA**: Version 12.6 or whichever is needed
-- **Apptainer (Singularity)** is used by CSC internally when loading modules
-
 ---
 
 ## 🧪 Setup Instructions (Puhti)
@@ -45,6 +13,9 @@ Your image structure must follow:
 DIANA/images/train/*.jpg
 DIANA/images/val/*.jpg
 DIANA/images/test/*.jpg
+DIANA/labels/train/*.txt
+DIANA/labels/val/*.txt
+DIANA/labels/test/*.txt
 DIANA/annotations/train.json
 DIANA/annotations/val.json
 DIANA/annotations/test.json
@@ -63,20 +34,26 @@ DIANA/annotations/test.json
 
 ```bash
 #!/bin/bash
-#SBATCH --job-name=diana_tf
-#SBATCH --account=project_<ID>
+#SBATCH --job-name=yolo_training
+#SBATCH --account=project_2013587
 #SBATCH --partition=gpu
-#SBATCH --gres=gpu:v100:4
-#SBATCH --cpus-per-task=8
+#SBATCH --gres=gpu:v100:1
+#SBATCH --cpus-per-task=4
 #SBATCH --mem=48G
-#SBATCH --time=02:00:00
-#SBATCH --output=/scratch/project_<ID>/<USERNAME>/train_output.log
+#SBATCH --time=04:00:00
+#SBATCH --output=/scratch/project_<ID>/<USERNAME>/yolo_train.log
 
+# Load required modules
 module purge
-module load tensorflow/2.18
-module load cuda/12.6.0
+module load pytorch/2.0
 
-apptainer_wrapper exec python3 /scratch/project_<ID>/train_model.py
+# Print environment and Python version
+echo "Running on $(hostname)"
+echo "Python path: $(which python3)"
+apptainer_wrapper exec python3 --version
+
+# Run training inside the container
+apptainer_wrapper exec python3 /scratch/project_<ID>/<USERNAME>/train_model.py
 ```
 
 ---
@@ -102,25 +79,11 @@ seff <JOB_ID>                       # Summary after run (GPU/CPU usage)
 
 ## ✅ Output
 
-- `best_model.keras`: Best model saved during training (based on `val_loss`)
-- `diana_trained_model.keras`: Last model (final epoch)
-- `training_curves.png`: Accuracy and loss plots
-
----
-
-## 💡 Notes
-
-- Training is distributed using `tf.distribute.MirroredStrategy` (multi-GPU)
-- Images are streamed using the efficient `tf.data` pipeline
-
----
-
-## 🔧 Future Ideas
-
-- Add TensorBoard logging
-- Add COCO-style evaluation metrics
-- Fine-tune ResNet layers for better accuracy
-- The model **ResNet50 (frozen or fine-tuned)** for feature extraction
+- `best_model.pt`: Best model saved during training (based on validation loss).
+- `last_model.pt`: Model saved at the final epoch.
+- `training_metrics.json`: JSON file containing training and validation metrics (e.g., loss, accuracy).
+- `training_curves.png`: Plot of training and validation loss/accuracy over epochs.
+- `yolo_train.log`: Log file containing detailed training output.
 
 ---
 
