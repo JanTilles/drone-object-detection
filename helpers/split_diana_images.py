@@ -12,7 +12,7 @@ import shutil
 
 # ============================
 
-SCRATCH_PATH = "/scratch/project_2013587/tillesja/DIANA"
+SCRATCH_PATH = "../dataset"
 
 IMAGE_PATH = os.path.join(SCRATCH_PATH, "images")  # Source folder (contains all images)
 

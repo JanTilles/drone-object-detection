@@ -14,7 +14,7 @@ import os
 
 # ============================
 
-MODEL_ARCH = "yolov8n.pt"  # Can be changed to yolov8s.pt, yolov8m.pt, etc.
+MODEL_ARCH = "yolo8m.pt"  # Can be changed to yolov8s.pt, yolov8m.pt, etc.
 
 EPOCHS = 1
 
@@ -22,7 +22,7 @@ IMG_SIZE = (960, 544)  # Keep original 16:9 image ratio
 
 BATCH_SIZE = 16
 
-PROJECT_DIR = "/scratch/project_2013587/tillesja/DIANA"
+PROJECT_DIR = "/scratch/project_2013501"
 
 DATA_YAML = os.path.join(PROJECT_DIR, "data.yaml")
 

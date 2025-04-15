@@ -8,7 +8,7 @@ from tqdm import tqdm
 
 # --- Configuration ---
 
-BASE_DIR = "/scratch/project_2013587/tillesja/DIANA"
+BASE_DIR = "../dataset"
 
 ANNOTATION_DIR = os.path.join(BASE_DIR, "annotations")
 

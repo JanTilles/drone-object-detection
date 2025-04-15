@@ -1,14 +1,13 @@
 #!/bin/bash
 
-#SBATCH --job-name=yolo_training
 
 #SBATCH --account=project_2013501
 
 #SBATCH --partition=gpu
 
-#SBATCH --gres=gpu:v100:3
+#SBATCH --gres=gpu:v100:4
 
-#SBATCH --cpus-per-task=8
+#SBATCH --cpus-per-task=4
 
 #SBATCH --mem=64G
 
@@ -16,28 +15,20 @@
 
 #SBATCH --output=/scratch/project_2013501/yolo_train.log
 
-
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
 
 # Load required modules
 
-module purge
+module --force purge
 
-module load pytorch/2.0
-
-
-
+module load python-data
+export PYTHONUSERBASE=/scratch/project_2013501/my-python-env
 # Print environment and Python version
 
 echo "Running on $(hostname)"
 
 echo "Python path: $(which python3)"
 
-apptainer_wrapper exec python3 --version
-
-
-
-# Run training inside the container
-
-apptainer_wrapper exec python3 /scratch/project_2013501/train_yolo_model.py
-
-
+set -xv
+python3 $*
