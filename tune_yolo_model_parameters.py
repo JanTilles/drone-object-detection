@@ -11,27 +11,27 @@ def train_model():
     # Define search space
     search_space = {
         "lr0": (1e-5, 1e-1),
-        "box": (0.0, 45.0),
+        "cls": (1.5, 4.0),
+        "flipud": (0.3, 1.0)
     }
-    #            "space": search_space,
 
     train_params = {
         "data": "dataset_config.yaml",
-        "epochs": 1,
-        "iterations": 10,
-        "batch": 16,  
+        "epochs": 30,
+        "iterations": 15,
+        "batch": 16,
         "imgsz": 1920,
-        "device": "cpu",
+        "device": "0,1,2,3",
         "plots": False,
         "save": False,
         "val": False,
         "project": "tune_parameters",
         "name": "tune_parameters",
         "classes": [0,1],
-        "cos_lr": True,  
+        "cos_lr": True,
         "exist_ok":True,
-        "optimizer": "AdamW",
-        "time": 11
+        "optimizer": "AdamW"
+
     }
 
     model.tune(**train_params)

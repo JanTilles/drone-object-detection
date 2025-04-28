@@ -34,23 +34,44 @@ def train_model():
 
     train_params = {
         "data": "dataset_config.yaml",
-        "epochs": 100,
-        "batch": 16,  # change to -1 
-        "imgsz": 2560,  
+        "epochs": 50,
+        "batch": 16,  
+        "imgsz": 1920,  
         "device": "0,1,2,3",  # Use GPU
         "project": "mlruns/DIANA",
-        "name": "auto_oneclass_larger_images",
+        "name": "auto_twoclass_1920_Adam",
         "save": True,  
         "patience": 20,  
         "save_period": 10, 
         "workers": 4,  
-        "lr0": 0.01,  
-        "lrf": 0.01,
-        "classes": [0],
+        "classes": [0,1],
         "cos_lr": True,  
         "exist_ok":True,
-        "optimizer": "auto",  
-        "val": True  
+        "optimizer": "adam",  
+        "val": True,
+        "lr0": 0.00846,
+        "lrf": 0.00844,
+        "momentum": 0.92663,
+        "weight_decay": 0.00054,
+        "warmup_epochs": 3.07784,
+        "warmup_momentum": 0.87785,
+        "box": 7.77595,
+        "cls": 0.44652,
+        "dfl": 1.29841,
+        "hsv_h": 0.01474,
+        "hsv_s": 0.69613,
+        "hsv_v": 0.40177,
+        "degrees": 0.0,
+        "translate": 0.10486,
+        "scale": 0.55003,
+        "shear": 0.0,
+        "perspective": 0.0,
+        "flipud": 0.0,
+        "fliplr": 0.49154,
+        "bgr": 0.0,
+        "mosaic": 0.93245,
+        "mixup": 0.0,
+        "copy_paste": 0.0
     }
 
     results = model.train(**train_params)
@@ -58,3 +79,4 @@ def train_model():
 if __name__ == "__main__":
     setup_mlflow()
     train_model()
+
