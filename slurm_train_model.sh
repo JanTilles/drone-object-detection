@@ -1,7 +1,7 @@
 #!/bin/bash
 
 
-#SBATCH --account=project_2013501
+#SBATCH --account=project_xxxxxxx
 
 #SBATCH --partition=gpu
 
@@ -13,7 +13,7 @@
 
 #SBATCH --time=10:00:00
 
-#SBATCH --output=/scratch/project_2013501/yolo_train.log
+#SBATCH --output=/scratch/project_xxxxxxx/yolo_train.log
 
 #SBATCH --nodes=1
 #SBATCH --ntasks=1
@@ -23,7 +23,7 @@
 module --force purge
 
 module load python-data
-export PYTHONUSERBASE=/scratch/project_2013501/my-python-env
+export PYTHONUSERBASE=/scratch/project_xxxxxxx/my-python-env
 # Print environment and Python version
 
 echo "Running on $(hostname)"
