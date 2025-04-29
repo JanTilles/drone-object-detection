@@ -52,7 +52,6 @@ drone-object-detection/
 
 ## Model Information
 
-**[WORK IN PROGRESS]**
 
 This project uses YOLO as the base model with MLflow for experiment tracking. 
 
