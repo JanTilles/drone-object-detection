@@ -2,6 +2,7 @@ import os
 import mlflow
 from ultralytics import YOLO, settings
 
+
 def find_repo_root():
     """Find the root directory of the repository."""
     current_dir = os.path.dirname(os.path.abspath(__file__))
@@ -13,7 +14,8 @@ def find_repo_root():
 
 def setup_mlflow():
     """Set up MLflow experiment and logging."""
-    repo_root = find_repo_root()
+    #repo_root = find_repo_root()
+    repo_root = "/scratch/project_2013501"
     if repo_root is None:
         raise RuntimeError("Repository root not found. Ensure the script is inside a Git repository.")
 
@@ -26,31 +28,50 @@ def setup_mlflow():
     print("Open: http://127.0.0.1:5000 in your browser")
 
 def train_model():
-    """Train YOLO model with specified parameters."""
-    model = YOLO('yolo11n.pt')  # Load pre-trained YOLO model
+    """Train YOLO model with specified parameters.""" 
+    model = YOLO("yolov8m.pt") # Load pre-trained YOLO model
+
 
     train_params = {
         "data": "dataset_config.yaml",
-        "epochs": 1,
+        "epochs": 50,
         "batch": 16,  
-        "imgsz": 640,  
-        "device": 0,  # Use GPU
+        "imgsz": 1920,  
+        "device": "0,1,2,3",  # Use GPU
         "project": "mlruns/DIANA",
-        "name": "baseline_run",
+        "name": "auto_twoclass_1920_Adam",
         "save": True,  
         "patience": 20,  
         "save_period": 10, 
-        "workers": 8,  
-        "lr0": 0.01,  
-        "lrf": 0.001,  
-        "momentum": 0.937,  
-        "weight_decay": 0.0005,  
-        "warmup_epochs": 5, 
+        "workers": 4,  
+        "classes": [0,1],
         "cos_lr": True,  
-        "optimizer": "auto",  
-        "pretrained": True,  
-        "verbose": True, 
-        "val": True  
+        "exist_ok":True,
+        "optimizer": "adam",  
+        "val": True,
+        "lr0": 0.00846,
+        "lrf": 0.00844,
+        "momentum": 0.92663,
+        "weight_decay": 0.00054,
+        "warmup_epochs": 3.07784,
+        "warmup_momentum": 0.87785,
+        "box": 7.77595,
+        "cls": 0.44652,
+        "dfl": 1.29841,
+        "hsv_h": 0.01474,
+        "hsv_s": 0.69613,
+        "hsv_v": 0.40177,
+        "degrees": 0.0,
+        "translate": 0.10486,
+        "scale": 0.55003,
+        "shear": 0.0,
+        "perspective": 0.0,
+        "flipud": 0.0,
+        "fliplr": 0.49154,
+        "bgr": 0.0,
+        "mosaic": 0.93245,
+        "mixup": 0.0,
+        "copy_paste": 0.0
     }
 
     results = model.train(**train_params)
@@ -58,3 +79,4 @@ def train_model():
 if __name__ == "__main__":
     setup_mlflow()
     train_model()
+

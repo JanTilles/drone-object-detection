@@ -39,16 +39,19 @@ drone-object-detection/
 │       ├── val/
 │── helpers/
 │   ├── convert_coco_to_yolo.py
+│   ├── show_image_with_labels.py
+│   ├── split_diana_images.py
 │── .gitignore
 │── dataset_config.yaml
 │── README.md
 │── requirements.txt
-│── retrain_yolov11.py
+│── slurm_train_model.sh
+│── train_yolo_model.py
+│── tune_yolo_model_parameters.py
 ```
 
 ## Model Information
 
-**[WORK IN PROGRESS]**
 
 This project uses YOLO as the base model with MLflow for experiment tracking. 
 
@@ -93,18 +96,103 @@ This script handles:
 4. Organizing images into train/val/test directories
 5. Creating the final dataset structure
 
-### Training the Model
-```bash
-python retrain_yolov11.py
-```
-
-### Monitoring Training
-After starting training:
-1. Run: `mlflow ui --backend-store-uri file:///path/to/drone-object-detection/mlruns`
-2. Open: http://127.0.0.1:5000 in your browser
-
 ## Project Goals
 - Develop a robust object detection model for maritime environments
 - Optimize for both accuracy and computational efficiency
 - Create a model that generalizes well across diverse environmental conditions
 - Document the entire machine learning pipeline from data preprocessing to model evaluation
+
+## 🧪 Setup Instructions (Puhti)
+
+### 1. Upload or extract your dataset to scratch
+Your image structure must follow:
+```
+DIANA/images/train/*.jpg
+DIANA/images/val/*.jpg
+DIANA/images/test/*.jpg
+DIANA/labels/train/*.txt
+DIANA/labels/val/*.txt
+DIANA/labels/test/*.txt
+DIANA/annotations/train.json
+DIANA/annotations/val.json
+DIANA/annotations/test.json
+```
+
+📍 Place under:
+```
+/scratch/project_XXXXXXX/<username>/DIANA/
+```
+
+---
+
+### 2. Edit the SLURM Batch Script
+
+`slurm_train_model.sh` example (requesting 4 GPUs, 48G memory):
+
+```bash
+#!/bin/bash
+
+
+#SBATCH --account=project_2013501
+
+#SBATCH --partition=gpu
+
+#SBATCH --gres=gpu:v100:4
+
+#SBATCH --cpus-per-task=8
+
+#SBATCH --mem=64G
+
+#SBATCH --time=10:00:00
+
+#SBATCH --output=/scratch/project_xxxxxxx/yolo_train.log
+
+#SBATCH --nodes=1
+#SBATCH --ntasks=1
+
+# Load required modules
+
+module --force purge
+
+module load python-data
+export PYTHONUSERBASE=/scratch/project_xxxxxxx/my-python-env
+# Print environment and Python version
+
+echo "Running on $(hostname)"
+
+echo "Python path: $(which python3)"
+
+set -xv
+python3 $*
+
+```
+
+---
+
+### 3. Submit the Training Job
+
+```bash
+cd /scratch/project_<ID>
+sbatch slurm_train_model.sh train_yolo_model.py
+```
+
+---
+
+### 4. Monitor Your Job
+
+```bash
+squeue -u <USERNAME>                  # View job queue
+tail -f yolo_train.log            # Follow training log
+seff <JOB_ID>                       # Summary after run (GPU/CPU usage)
+```
+
+---
+
+## ✅ Output
+
+- `best_model.pt`: Best model saved during training (based on validation loss).
+- `last_model.pt`: Model saved at the final epoch.
+- `yolo_train.log`: Log file containing detailed training output.
+- various metrics and graphs
+
+---
