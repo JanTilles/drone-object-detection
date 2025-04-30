@@ -1,5 +1,5 @@
 # path
-path: ./dataset
+path: ../dataset
 train: images/train  
 val: images/val  
 test: images/test
@@ -14,3 +14,4 @@ names:
   - ship
   - sea_mark
   - floating_object
+  

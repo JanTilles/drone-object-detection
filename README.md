@@ -1,110 +1,96 @@
-# Drone Imagery for Archipelago Navigation and Analysis (DIANA)
+# 🧠 DIANA CNN Training on Puhti (CSC HPC Finland)
 
-## Project Overview
-This project focuses on developing an accurate and lightweight computer vision algorithm for detecting objects in maritime environments using drone imagery. We're utilizing the DIANA dataset, which consists of annotated drone images collected from Finland's southwestern archipelago. Our primary objective is to optimize detection accuracy while ensuring computational efficiency using the YOLO (You Only Look Once) model architecture.
+> **Note:** The DIANA dataset is not included in this repository. Additionally, its original COCO format has been modified to the structure presented here before training.
 
-## Dataset Description
-The DIANA dataset was collected in the summer of 2020 in Finland's southwestern archipelago. This area was chosen for its environmental complexity, which contrasts with the simpler backgrounds of open-sea datasets.
+This project contains a TensorFlow-based Convolutional Neural Network (CNN) pipeline to train a deep learning model on the [DIANA drone dataset](https://www.kaggle.com/datasets/aminmajd/diana-drone-imagery-for-archipelago-navigation), optimized for **multi-GPU training on Puhti**, the CSC supercomputer in Finland.
+---
 
-### Key Features
-- **High-resolution images**: 3840×2160 pixels
-- **Volume**: 17,758 images with 353,141 object instances
-- **Object classes**: 5 maritime object types
-  - motor_boat
-  - sailing_boat
-  - ship
-  - sea_mark
-  - floating_object
-- **Capture altitude**: 8 to 120 meters
-- **Diverse scenarios**: Various weather conditions, sun orientations, heights, angles, and vessel types
-- **Annotation format**: COCO format (converted to YOLO format for training)
-- **Split ratio**: 70% training, 15% validation, 15% testing
+## 🧪 Setup Instructions (Puhti)
 
-### Environmental Complexity
-While open-sea datasets mostly feature water and sky, DIANA includes diverse scenes with islands, forests, buildings, and vehicles, making it more challenging for object detection algorithms.
-
-## Project Structure
+### 1. Upload or extract your dataset to scratch
+Your image structure must follow:
 ```
-drone-object-detection/
-│── .git/
-│── .venv/
-│── dataset/
-│   ├── images/
-│   │   ├── train/
-│   │   ├── test/
-│   │   ├── val/
-│   ├── labels/
-│       ├── train/
-│       ├── test/
-│       ├── val/
-│── helpers/
-│   ├── convert_coco_to_yolo.py
-│── .gitignore
-│── dataset_config.yaml
-│── README.md
-│── requirements.txt
-│── retrain_yolov11.py
+DIANA/images/train/*.jpg
+DIANA/images/val/*.jpg
+DIANA/images/test/*.jpg
+DIANA/labels/train/*.txt
+DIANA/labels/val/*.txt
+DIANA/labels/test/*.txt
+DIANA/annotations/train.json
+DIANA/annotations/val.json
+DIANA/annotations/test.json
 ```
 
-## Model Information
+📍 Place under:
+```
+/scratch/project_XXXXXXX/<username>/DIANA/
+```
 
-**[WORK IN PROGRESS]**
+---
 
-This project uses YOLO as the base model with MLflow for experiment tracking. 
+### 2. Edit the SLURM Batch Script
 
-## Usage
+`train_model.sh` example (requesting 4 GPUs, 48G memory):
 
-### Setup Environment
 ```bash
-# Clone the repository
-git clone https://github.com/username/drone-object-detection.git
-cd drone-object-detection
+#!/bin/bash
+#SBATCH --job-name=yolo_training
+#SBATCH --account=project_2013587
+#SBATCH --partition=gpu
+#SBATCH --gres=gpu:v100:1
+#SBATCH --cpus-per-task=4
+#SBATCH --mem=48G
+#SBATCH --time=04:00:00
+#SBATCH --output=/scratch/project_<ID>/<USERNAME>/yolo_train.log
 
-# Create and activate virtual environment
-python -m venv .venv
-.venv\Scripts\activate
+# Load required modules
+module purge
+module load pytorch/2.0
 
-# Install dependencies
-pip install -r requirements.txt
+# Print environment and Python version
+echo "Running on $(hostname)"
+echo "Python path: $(which python3)"
+apptainer_wrapper exec python3 --version
+
+# Run training inside the container
+apptainer_wrapper exec python3 /scratch/project_<ID>/<USERNAME>/train_model.py
 ```
 
-### Data Preparation
+---
 
-**Note:** The dataset is not included in this repository due to its large size. However, the DIANA dataset has been converted from COCO to YOLO format for the project. This conversion process was completed using the `convert_coco_to_yolo.py` script in the helpers directory.
+### 3. Submit the Training Job
 
-For reference, if starting with the original COCO format annotations, the conversion would require the following directory structure:
-```
-drone-object-detection/
-│── images/             # Original COCO format images
-│── annotations/        # Original COCO format annotation files
-│── helpers/
-│   ├── convert_coco_to_yolo.py
-```
-
-And then running:
 ```bash
-python helpers/convert_coco_to_yolo.py
+cd /scratch/project_<ID>
+sbatch train_model.sh
 ```
 
-This script handles:
-1. Cleaning annotation files
-2. Incrementing category IDs as needed
-3. Converting COCO annotations to YOLO format
-4. Organizing images into train/val/test directories
-5. Creating the final dataset structure
+---
 
-### Training the Model
+### 4. Monitor Your Job
+
 ```bash
-python retrain_yolov11.py
+squeue -u <USERNAME>                  # View job queue
+tail -f train_output.log            # Follow training log
+seff <JOB_ID>                       # Summary after run (GPU/CPU usage)
 ```
 
-### Monitoring Training
-After starting training:
-1. Run: `mlflow ui --backend-store-uri file:///path/to/drone-object-detection/mlruns`
-2. Open: http://127.0.0.1:5000 in your browser
+---
 
-## Project Goals
-- Develop a robust object detection model for maritime environments
-- Optimize for both accuracy and computational efficiency
-- Create a model that generalizes well across diverse environmental conditions
-- Document the entire machine learning pipeline from data preprocessing to model evaluation
+## ✅ Output
+
+- `best_model.pt`: Best model saved during training (based on validation loss).
+- `last_model.pt`: Model saved at the final epoch.
+- `training_metrics.json`: JSON file containing training and validation metrics (e.g., loss, accuracy).
+- `training_curves.png`: Plot of training and validation loss/accuracy over epochs.
+- `yolo_train.log`: Log file containing detailed training output.
+
+---
+
+## 📬 Author
+
+Created by **Jan Tilles**  
+Contact: [jan.tilles@example.com](mailto:jan.tilles@example.com)  
+For more on Puhti: [CSC Docs](https://docs.csc.fi)
+
+---
